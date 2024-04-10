@@ -2,6 +2,36 @@
 ### Storing them here so they're easily accessible.
 
 import tensorflow as tf
+import zipfile
+import urllib.request as ur
+import shutil
+
+def download_unzip_data(url, filename, zip_path, transfer_path):
+    """
+    Unzips filename into the current working directory.
+
+    Args:
+        url (str): link from internet where file is located.
+        filename (str): a filepath to a target zip folder to be unzipped.
+        zip_path (str): path where zip file is located in local machine.
+        transfer_zip (str): path where file will be unpackaged from zip.
+    """
+    if not os.path.exists(f'{zip_path}/{filename}'):
+        # download zip file
+        ur.urlretrieve(url, filename)
+        shutil.move(filename, f'{zip_path}')
+
+    # unzip the download file
+    zip_ref = zipfile.ZipFile(f'{zip_path}/{filename}', 'r')
+
+    # remove folder if exist
+    folder = filename.split('.')[0]
+    if os.path.isdir(f'{transfer_path}/{folder}'):
+        shutil.rmtree(f'{transfer_path}/{folder}')
+
+    zip_ref.extractall(f'{transfer_path}')
+    zip_ref.close()
+
 
 # Create a function to import an image and resize it to be able to be used with our model
 def load_and_prep_image(filename, img_shape=224, scale=True):
@@ -266,6 +296,7 @@ def walk_through_dir(dir_path):
     
 # Function to evaluate: accuracy, precision, recall, f1-score
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from functools import reduce
 
 def calculate_results(y_true, y_pred):
   """
@@ -285,4 +316,5 @@ def calculate_results(y_true, y_pred):
                   "precision": model_precision,
                   "recall": model_recall,
                   "f1": model_f1}
-  return model_results
+  
+  return reduce(lambda x, y: dict((k, v * 100) for k, v in model_results.items()), model_results)     

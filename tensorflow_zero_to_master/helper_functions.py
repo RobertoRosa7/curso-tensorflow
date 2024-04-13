@@ -6,13 +6,26 @@ import zipfile
 import urllib.request as ur
 import shutil
 
+# create a function to read the lines of a document
+def get_lines(filename):
+    """ 
+    Reads filename (a txt filename) and returns the lines of a text as a list
+    Args:
+        filename:  a string  containing the target filepath
+    Returns:
+        A list of strings with one string per line from the target filename
+    """
+    with open(filename, 'r') as file:
+        return file.readlines()
+    
+
 def download_unzip_data(url, filename, zip_path, transfer_path):
     """
     Unzips filename into the current working directory.
 
     Args:
         url (str): link from internet where file is located.
-        filename (str): a filepath to a target zip folder to be unzipped.
+        filename (str): a filepath to a target zip folder to be unzipped.F
         zip_path (str): path where zip file is located in local machine.
         transfer_zip (str): path where file will be unpackaged from zip.
     """
@@ -309,7 +322,7 @@ def calculate_results(y_true, y_pred):
   Returns a dictionary of accuracy, precision, recall, f1-score.
   """
   # Calculate model accuracy
-  model_accuracy = accuracy_score(y_true, y_pred) * 100
+  model_accuracy = accuracy_score(y_true, y_pred)
   # Calculate model precision, recall and f1 score using "weighted average
   model_precision, model_recall, model_f1, _ = precision_recall_fscore_support(y_true, y_pred, average="weighted")
   model_results = {"accuracy": model_accuracy,
@@ -317,4 +330,5 @@ def calculate_results(y_true, y_pred):
                   "recall": model_recall,
                   "f1": model_f1}
   
-  return reduce(lambda x, y: dict((k, v * 100) for k, v in model_results.items()), model_results)     
+  # return reduce(lambda x, y: dict((k, v * 100) for k, v in model_results.items()), model_results)     
+  return model_results

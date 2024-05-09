@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import logging
-from datetime import datetime
-
 
 class LogService:
-    date_log = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-    logging.basicConfig(filename='logs/batch.log', level=logging.INFO)
-
-    def info(self, msg) -> None:
-        logging.info('[{}] {}'.format(self.date_log, msg))
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s %(levelname)s %(name)s : %(message)s')
+    @staticmethod
+    def logger():
+        return logging
